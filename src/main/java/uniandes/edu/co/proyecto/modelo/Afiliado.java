@@ -1,87 +1,127 @@
 package uniandes.edu.co.proyecto.modelo;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
+import org.hibernate.persister.entity.DiscriminatorType;
+
+import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.GenerationType;
-
 
 @Entity
-@Table(name="afiliados")
-@Inheritance(strategy = InheritanceType.JOINED)
-
-public abstract class AfiliadoEntity {
+@Table(name="afiliado")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+public class Afiliado {
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-        private long id_afiliado; 
-        private String nombre;
-        private int tipo;
-        private String direccion;
-        private String telefono;
-        private Date fecha_nacimiento; 
-        private int contribuyente_id; 
-        private String parentesco;
-       
-        public void setId_Afiliado(final long id_Afiliado) {
-            this.id_afiliado = id_Afiliado;
-        }
-        public void setNombre(final String nombre) {
-            this.nombre = nombre;
-        }
-        public void setTipo(final int tipo) {
-            this.tipo = tipo;
-        }
-        public void setDireccion(final String direccion) {
-            this.direccion = direccion;
-        }
-        public void setTelefono(final String telefono) {
-            this.telefono = telefono;
-        }
-        public void setFecha_nacimiento(final Date fecha_nacimiento) {
-            this.fecha_nacimiento = fecha_nacimiento;
-        }
-        public void setContribuyente_id(final int contribuyente_id) {
-            this.contribuyente_id = contribuyente_id;
-        }
-        public void setParentesco(final String parentesco) {
-            this.parentesco = parentesco;
-        }
-        public AfiliadoEntity(final String nombre, final int tipo, final String direccion, final String telefono, final Date fecha_nacimiento,
-                final int contribuyente_id, final String parentesco) {
-            this.nombre = nombre;
-            this.tipo = tipo;
-            this.direccion = direccion;
-            this.telefono = telefono;
-            this.fecha_nacimiento = fecha_nacimiento;
-            this.contribuyente_id = contribuyente_id;
-            this.parentesco = parentesco;
-        }
-        public AfiliadoEntity(){;}
-            @ManyToOne
-            @JoinColumn(name = "contribuyente_id")
-            private ContribuyenteEntity contribuyente;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
+    private String nombre;
+    private String direccion;
+    private String telefono;
+    private Date fechaNacimiento;
+    private String parentesco;
+    
+    @ManyToOne
+    @JoinColumn(name = "contribuyente_id")
+    private Contribuyente contribuyente;
 
-            @OneToMany(mappedBy = "afiliado")
-            private List<CitaEntity> citas;
+    @ManyToOne
+    @JoinColumn(name = "beneficiario_id")
+    private Beneficiario beneficiario;
 
-            @OneToMany(mappedBy = "afiliado")
-            private List<RecetaEntity> recetas;
+    @OneToMany(mappedBy = "afiliado")
+    private List<Cita> citas;
 
-            @OneToMany(mappedBy = "afiliado")
-            private List<OrdenServicioEntity> ordenesServicio;
+    @OneToMany(mappedBy = "afiliado")
+    private List<Receta> receta;
 
-            @ManyToOne
-            @JoinColumn(name = "eps_id")
-            private EPSEntity eps;
-                
+    @ManyToOne
+    @JoinColumn(name = "eps_id")
+    private Eps eps;
+
+
+    public Afiliado(String nombre, String direccion, String telefono, Date fechaNacimiento, String parentesco,
+            Contribuyente contribuyente, List<Cita> citas) {
+        this.nombre = nombre;
+        this.direccion = direccion;
+        this.telefono = telefono;
+        this.fechaNacimiento = fechaNacimiento;
+        this.parentesco = parentesco;
+        this.contribuyente = contribuyente;
+        this.citas = citas;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+    public Date getFechaNacimiento() {
+        return fechaNacimiento;
+    }
+
+    public void setFechaNacimiento(Date fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
+    }
+
+    public String getParentesco() {
+        return parentesco;
+    }
+
+    public void setParentesco(String parentesco) {
+        this.parentesco = parentesco;
+    }
+
+    public Contribuyente getContribuyente() {
+        return contribuyente;
+    }
+
+    public void setContribuyente(Contribuyente contribuyente) {
+        this.contribuyente = contribuyente;
+    }
+
+    public List<Cita> getCitas() {
+        return citas;
+    }
+
+    public void setCitas(List<Cita> citas) {
+        this.citas = citas;
+    }
+    public Afiliado() {;} 
 }

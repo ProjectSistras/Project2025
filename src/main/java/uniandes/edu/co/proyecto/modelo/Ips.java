@@ -1,141 +1,117 @@
 package uniandes.edu.co.proyecto.modelo;
 
-import java.util.Date;
 import java.util.List;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name="ips")
-
-
-public abstract class IPSEntity {
+public class Ips {
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-        private long id_ips;
-        private String NIT;
-        private String nombre;
-        private String direccion;
-        private String telefono;
-        private List servicios_prestados;
-       
-        public IPSEntity(String nIT, String nombre, String direccion, String telefono, List servicios_prestados,
-                List<MedicoEntity> medicos, List<CitaEntity> citas, List<OrdenServicioEntity> ordenesServicio,
-                EPSEntity eps) {
-            NIT = nIT;
-            this.nombre = nombre;
-            this.direccion = direccion;
-            this.telefono = telefono;
-            this.servicios_prestados = servicios_prestados;
-            this.medicos = medicos;
-            this.citas = citas;
-            this.ordenesServicio = ordenesServicio;
-            this.eps = eps;
-        }
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer ips_id;
+    
+    private String nit;
+    
+    private String nombre;
+    private String direccion;
+    private String telefono;
+    
+    @OneToMany(mappedBy = "ips")
+    private List<Medico> medicos;
+    
+    @OneToMany(mappedBy = "ips")
+    private List<Cita> citas;
+    
+    @ManyToMany
+    @JoinTable(
+      name = "ips_servicio", 
+      joinColumns = @JoinColumn(name = "ips_id"), 
+      inverseJoinColumns = @JoinColumn(name = "servicio_id"))
+    private List<Servicio> servicios;
 
-        public long getId_ips() {
-            return id_ips;
-        }
+    public Ips(String nit, String nombre, String direccion, String telefono, List<Medico> medicos, List<Cita> citas,
+            List<Servicio> servicios) {
+        this.nit = nit;
+        this.nombre = nombre;
+        this.direccion = direccion;
+        this.telefono = telefono;
+        this.medicos = medicos;
+        this.citas = citas;
+        this.servicios = servicios;
+    }
 
-        public void setId_ips(long id_ips) {
-            this.id_ips = id_ips;
-        }
+    public Integer getIps_id() {
+        return ips_id;
+    }
 
-        public String getNIT() {
-            return NIT;
-        }
+    public void setIps_id(Integer ips_id) {
+        this.ips_id = ips_id;
+    }
 
-        public void setNIT(String nIT) {
-            NIT = nIT;
-        }
+    public String getNit() {
+        return nit;
+    }
 
-        public String getNombre() {
-            return nombre;
-        }
+    public void setNit(String nit) {
+        this.nit = nit;
+    }
 
-        public void setNombre(String nombre) {
-            this.nombre = nombre;
-        }
+    public String getNombre() {
+        return nombre;
+    }
 
-        public String getDireccion() {
-            return direccion;
-        }
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 
-        public void setDireccion(String direccion) {
-            this.direccion = direccion;
-        }
+    public String getDireccion() {
+        return direccion;
+    }
 
-        public String getTelefono() {
-            return telefono;
-        }
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
 
-        public void setTelefono(String telefono) {
-            this.telefono = telefono;
-        }
+    public String getTelefono() {
+        return telefono;
+    }
 
-        public List getServicios_prestados() {
-            return servicios_prestados;
-        }
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
 
-        public void setServicios_prestados(List servicios_prestados) {
-            this.servicios_prestados = servicios_prestados;
-        }
+    public List<Medico> getMedicos() {
+        return medicos;
+    }
 
-        public List<MedicoEntity> getMedicos() {
-            return medicos;
-        }
+    public void setMedicos(List<Medico> medicos) {
+        this.medicos = medicos;
+    }
 
-        public void setMedicos(List<MedicoEntity> medicos) {
-            this.medicos = medicos;
-        }
+    public List<Cita> getCitas() {
+        return citas;
+    }
 
-        public List<CitaEntity> getCitas() {
-            return citas;
-        }
+    public void setCitas(List<Cita> citas) {
+        this.citas = citas;
+    }
 
-        public void setCitas(List<CitaEntity> citas) {
-            this.citas = citas;
-        }
+    public List<Servicio> getServicios() {
+        return servicios;
+    }
 
-        public List<OrdenServicioEntity> getOrdenesServicio() {
-            return ordenesServicio;
-        }
+    public void setServicios(List<Servicio> servicios) {
+        this.servicios = servicios;
+    }
 
-        public void setOrdenesServicio(List<OrdenServicioEntity> ordenesServicio) {
-            this.ordenesServicio = ordenesServicio;
-        }
-
-        public EPSEntity getEps() {
-            return eps;
-        }
-
-        public void setEps(EPSEntity eps) {
-            this.eps = eps;
-        }
-
-        public IPSEntity(){;}
-        @OneToMany(mappedBy = "ips")
-        private List<MedicoEntity> medicos;
-
-        @OneToMany(mappedBy = "ips")
-        private List<CitaEntity> citas;
-
-        @OneToMany(mappedBy = "ips")
-        private List<OrdenServicioEntity> ordenesServicio;
-
-        @ManyToOne
-        @JoinColumn(name = "eps_id")
-        private EPSEntity eps;
-
-
-
+    public Ips() {;}    
 }
